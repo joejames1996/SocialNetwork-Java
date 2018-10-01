@@ -5,8 +5,8 @@ logging:
 
 database:
   driverClass: com.mysql.jdbc.Driver
-  user: myface
-  password: myface
+  user: root
+  password: 4q1WIfvybxBN
 
   # verifyServerCertificate=false to avoid log spam
   url: jdbc:mysql://localhost/socialnetwork?verifyServerCertificate=false&useSSL=true
