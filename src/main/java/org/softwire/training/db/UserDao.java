@@ -23,12 +23,23 @@ public class UserDao
         }
     }
 
-    public User getUser(String username)
+    public User getUserByUsername(String username)
     {
         try(Handle handle = jdbi.open())
         {
-            return handle.createQuery("SELECT * FROM users WHERE username = :username")
+            return handle.select("SELECT * FROM users WHERE username = :username")
                     .bind("username", username)
+                    .mapToBean(User.class)
+                    .findOnly();
+        }
+    }
+
+    public User getUserByUserId(int userId)
+    {
+        try(Handle handle = jdbi.open())
+        {
+            return handle.select("SELECT * FROM users WHERE userId = :userId")
+                    .bind("userId", userId)
                     .mapToBean(User.class)
                     .findOnly();
         }

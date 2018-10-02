@@ -2,7 +2,6 @@ package org.softwire.training.core;
 
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
-import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.softwire.training.db.UserDao;
@@ -24,7 +23,7 @@ public class MyFaceAuthenticator implements Authenticator<BasicCredentials, User
 
     @Override
     public Optional<UserPrincipal> authenticate(BasicCredentials credentials) {
-        User user = userDao.getUser(credentials.getUsername());
+        User user = userDao.getUserByUsername(credentials.getUsername());
         if(user.getPassword().equals(credentials.getPassword()))
         {
             UserPrincipal userPrincipal = new UserPrincipal(user);

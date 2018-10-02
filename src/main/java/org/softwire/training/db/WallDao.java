@@ -22,8 +22,10 @@ public class WallDao {
 
     public List<SocialEvent> readWall(User user) {
         try (Handle handle = jdbi.open()) {
-            return handle.createQuery("SELECT author AS name, content FROM social_events WHERE user = :user")
-                    .bind("user", user.getName())
+            return handle.createQuery("SELECT social_events.content, users.userId, users.fullname FROM social_events " +
+                    "JOIN users ON users.userId = social_events.authorId " +
+                    "WHERE social_events.userId = :user")
+                    .bind("user", user.getUserId())
                     .mapToBean(SocialEvent.class)
                     .list();
         }
@@ -31,7 +33,7 @@ public class WallDao {
 
     public List<User> getAllUsers() {
         try (Handle handle = jdbi.open()) {
-            return handle.createQuery("SELECT DISTINCT user AS name FROM social_events")
+            return handle.createQuery("SELECT * FROM users")
                     .mapToBean(User.class)
                     .list();
         }

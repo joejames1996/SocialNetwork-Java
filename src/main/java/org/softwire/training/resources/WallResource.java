@@ -4,6 +4,7 @@ import io.dropwizard.auth.Auth;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.softwire.training.db.UserDao;
 import org.softwire.training.db.WallDao;
 import org.softwire.training.models.UserPrincipal;
 import org.softwire.training.models.SocialEvent;
@@ -14,6 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,9 +27,11 @@ public class WallResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(WallResource.class);
 
     private final WallDao wallDao;
+    private final UserDao userDao;
 
-    public WallResource(WallDao wallDao) {
+    public WallResource(WallDao wallDao, UserDao userDao) {
         this.wallDao = wallDao;
+        this.userDao = userDao;
     }
 
     @GET
@@ -36,11 +40,20 @@ public class WallResource {
     public WallView get(
             @Auth UserPrincipal userPrincipal,
             @PathParam("subjectName")  @NotEmpty String subjectName) {
-        User subject = new User(subjectName);
+        //User subject = new User(subjectName);
+        User subject = userDao.getUserByUsername(subjectName);
 
         LOGGER.info("Get wall. User: {} Subject: {}", userPrincipal, subject);
 
         List<SocialEvent> socialEvents = wallDao.readWall(subject);
+
+        List<SocialEvent> socialEventList = new ArrayList<>();
+
+        for(SocialEvent socialEvent : socialEvents)
+        {
+            User author = socialEvent.getAuthor();
+        }
+
         return new WallView(socialEvents, subject, userPrincipal.getUser());
     }
 

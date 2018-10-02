@@ -44,10 +44,6 @@ public class NewUserResource {
 
         userDao.createNewUser(user);
 
-//        // TODO: Implement this!
-//        LOGGER.error("This functionality is missing!  username: {} password: {} fullname: {}",
-//                username, password, fullname);
-
         return Response.seeOther(URI.create("/home")).build();
     }
 }

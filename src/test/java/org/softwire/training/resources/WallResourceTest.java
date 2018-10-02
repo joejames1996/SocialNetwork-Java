@@ -1,6 +1,7 @@
 package org.softwire.training.resources;
 
 import org.junit.jupiter.api.Test;
+import org.softwire.training.db.UserDao;
 import org.softwire.training.db.WallDao;
 import org.softwire.training.models.UserPrincipal;
 import org.softwire.training.models.SocialEvent;
@@ -21,7 +22,8 @@ public class WallResourceTest {
     private static final User USER = new User("FrankReynolds");
 
     private final WallDao wallDao = mock(WallDao.class);
-    private final WallResource resource = new WallResource(wallDao);
+    private final UserDao userDao = mock(UserDao.class);
+    private final WallResource resource = new WallResource(wallDao, userDao);
 
     @Test
     public void getRequestDisplaysWallContents() {

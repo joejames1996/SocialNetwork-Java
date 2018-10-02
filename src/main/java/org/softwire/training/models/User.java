@@ -2,7 +2,7 @@ package org.softwire.training.models;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import org.jdbi.v3.core.mapper.reflect.ColumnName;
+import org.softwire.training.db.UserDao;
 
 /**
  * A user of the social network.
@@ -59,7 +59,7 @@ public class User {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("name", name)
+                .add("username", username)
                 .toString();
     }
 

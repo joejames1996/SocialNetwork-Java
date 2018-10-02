@@ -63,7 +63,7 @@ public class SocialNetworkApplication extends Application<SocialNetworkConfigura
 
         // Register Resources
         environment.jersey().register(new HomePageResource(wallDao));
-        environment.jersey().register(new WallResource(wallDao));
+        environment.jersey().register(new WallResource(wallDao, userDao));
         environment.jersey().register(new LandingPageResource());
         environment.jersey().register(new NewUserResource(userDao));
 
