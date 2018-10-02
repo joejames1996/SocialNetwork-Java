@@ -41,9 +41,9 @@ public class WallDao {
 
     public void writeOnWall(User user, SocialEvent socialEvent) {
         try (Handle handle = jdbi.open()) {
-            handle.createCall("INSERT INTO social_events (user, author, content) VALUES (:user, :author, :content)")
-                    .bind("author", socialEvent.getAuthor().getName())
-                    .bind("user", user.getName())
+            handle.createCall("INSERT INTO social_events (userId, authorId, content) VALUES (:user, :author, :content)")
+                    .bind("author", socialEvent.getAuthor().getUserId())
+                    .bind("user", user.getUserId())
                     .bind("content", socialEvent.getContent())
                     .invoke();
         }

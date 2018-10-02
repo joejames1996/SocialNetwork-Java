@@ -64,7 +64,9 @@ public class WallResource {
             @Auth UserPrincipal userPrincipal,
             @PathParam("subjectName") @NotEmpty String subjectName,
             @FormParam("message") @NotEmpty String message) {
-        User subject = new User(subjectName);
+        //User subject = new User(subjectName);
+
+        User subject = userDao.getUserByUsername(subjectName);
 
         LOGGER.info("Post to Wall. User: {} Subject: {} Message: {}",
                 userPrincipal, subject, message);
