@@ -47,13 +47,6 @@ public class WallResource {
 
         List<SocialEvent> socialEvents = wallDao.readWall(subject);
 
-        List<SocialEvent> socialEventList = new ArrayList<>();
-
-        for(SocialEvent socialEvent : socialEvents)
-        {
-            User author = socialEvent.getAuthor();
-        }
-
         return new WallView(socialEvents, subject, userPrincipal.getUser());
     }
 
