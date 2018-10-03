@@ -3,6 +3,8 @@ package org.softwire.training.resources;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.softwire.training.core.utils.Hash;
+import org.softwire.training.core.utils.Salt;
 import org.softwire.training.db.UserDao;
 import org.softwire.training.models.User;
 import org.softwire.training.views.NewUserView;
@@ -40,7 +42,10 @@ public class NewUserResource {
             @FormParam("password") @NotEmpty String password,
             @FormParam("fullname") @NotEmpty String fullname) {
 
-        User user = new User(username, password, fullname);
+        //String salt = Salt.createSalt();
+        String hashedPassword = Hash.hashPassword(password);
+
+        User user = new User(username, hashedPassword, fullname);
 
         userDao.createNewUser(user);
 

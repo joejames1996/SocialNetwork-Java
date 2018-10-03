@@ -4,6 +4,7 @@ import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.softwire.training.core.utils.Hash;
 import org.softwire.training.db.UserDao;
 import org.softwire.training.models.User;
 import org.softwire.training.models.UserPrincipal;
@@ -24,7 +25,9 @@ public class MyFaceAuthenticator implements Authenticator<BasicCredentials, User
     @Override
     public Optional<UserPrincipal> authenticate(BasicCredentials credentials) {
         User user = userDao.getUserByUsername(credentials.getUsername());
-        if(user.getPassword().equals(credentials.getPassword()))
+        LOGGER.debug(user.getPassword());
+        //if(user.getPassword().equals(credentials.getPassword()))
+        if(Hash.compareHashedPassword(credentials.getPassword(), user.getPassword()))
         {
             UserPrincipal userPrincipal = new UserPrincipal(user);
             LOGGER.debug("Successfully authenticated user: {}", userPrincipal);
