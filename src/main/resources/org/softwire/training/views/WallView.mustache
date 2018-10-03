@@ -15,6 +15,7 @@
                     <a class="header" href=/wall/{{author.fullname}}>{{author.fullname}}</a>
                     <div class="description">{{content}}</div>
                 </div>
+                {{#canBeDeleted}}<button class="ui labeled red right floated icon button">Delete<i class="inverted trash icon"></i></button>{{/canBeDeleted}}
             </div>
         {{/socialEvents}}
     </div>

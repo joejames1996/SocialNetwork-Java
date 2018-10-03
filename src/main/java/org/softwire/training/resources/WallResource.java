@@ -46,8 +46,24 @@ public class WallResource {
         LOGGER.info("Get wall. User: {} Subject: {}", userPrincipal, subject);
 
         List<SocialEvent> socialEvents = wallDao.readWall(subject);
+        List<SocialEvent> socialEventsWithDelete = new ArrayList<>();
 
-        return new WallView(socialEvents, subject, userPrincipal.getUser());
+        for(SocialEvent socialEvent : socialEvents)
+        {
+            if(socialEvent.getAuthor().getUserId() == userPrincipal.getUser().getUserId() || subject.getUserId() == userPrincipal.getUser().getUserId())
+            {
+                socialEvent.setCanBeDeleted(true);
+                LOGGER.debug("true");
+            }
+            else
+            {
+                socialEvent.setCanBeDeleted(false);
+                LOGGER.debug("false");
+            }
+            socialEventsWithDelete.add(socialEvent);
+        }
+
+        return new WallView(socialEventsWithDelete, subject, userPrincipal.getUser());
     }
 
     @POST

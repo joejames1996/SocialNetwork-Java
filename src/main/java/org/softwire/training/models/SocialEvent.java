@@ -18,6 +18,7 @@ public class SocialEvent {
      * The text content of the Event
      */
     private String content;
+    private boolean canBeDeleted;
 
     public SocialEvent() {}
 
@@ -67,5 +68,15 @@ public class SocialEvent {
                 .add("author", author)
                 .add("content", content)
                 .toString();
+    }
+
+    public boolean isCanBeDeleted()
+    {
+        return canBeDeleted;
+    }
+
+    public void setCanBeDeleted(boolean canBeDeleted)
+    {
+        this.canBeDeleted = canBeDeleted;
     }
 }

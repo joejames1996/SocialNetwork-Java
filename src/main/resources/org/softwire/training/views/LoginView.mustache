@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> Head }}
+<body>
+
+<div class="ui main text container">
+
+    <form name="form" class="ui form" action="/login" method="post">
+
+        <div class="ui segment">
+
+            <div class="field">
+                <label for="username" class="ui label">Username</label>
+                <input name="username" id="username" type="text" placeholder="Username"/>
+            </div>
+
+            <div class="field">
+                <label for="password" class="ui label">Password</label>
+                <input name="password" id="password" type="password"/>
+            </div>
+
+            <button id="createUser" class="ui button" type="submit">Login</button>
+
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
