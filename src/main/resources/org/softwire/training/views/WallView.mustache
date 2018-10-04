@@ -12,10 +12,10 @@
             <div class="item">
                 <img class="ui avatar image" src="/assets/images/ic_note_black_24px.svg">
                 <div class="content">
-                    <a class="header" href=/wall/{{author.fullname}}>{{author.fullname}}</a>
+                    <a class="header" href="/wall/{{author.username}}">{{author.fullname}}</a>
                     <div class="description">{{content}}</div>
                 </div>
-                {{#canBeDeleted}}<button class="ui labeled red right floated icon button">Delete<i class="inverted trash icon"></i></button>{{/canBeDeleted}}
+                {{#canBeDeleted}}<a href="/wall/{{subject.username}}/delete/{{id}}" class="ui labeled red right floated icon button">Delete<i class="inverted trash icon"></i></a>{{/canBeDeleted}}
             </div>
         {{/socialEvents}}
     </div>

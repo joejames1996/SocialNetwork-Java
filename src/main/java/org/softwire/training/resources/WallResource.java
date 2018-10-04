@@ -11,6 +11,7 @@ import org.softwire.training.models.SocialEvent;
 import org.softwire.training.models.User;
 import org.softwire.training.views.WallView;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,7 +51,7 @@ public class WallResource {
 
         for(SocialEvent socialEvent : socialEvents)
         {
-            if(socialEvent.getAuthor().getUserId() == userPrincipal.getUser().getUserId() || subject.getUserId() == userPrincipal.getUser().getUserId())
+            if(hasPermissionToDelete(userPrincipal, subject, socialEvent))
             {
                 socialEvent.setCanBeDeleted(true);
                 LOGGER.debug("true");
@@ -64,6 +65,11 @@ public class WallResource {
         }
 
         return new WallView(socialEventsWithDelete, subject, userPrincipal.getUser());
+    }
+
+    private boolean hasPermissionToDelete(@Auth UserPrincipal userPrincipal, User subject, SocialEvent socialEvent)
+    {
+        return socialEvent.getAuthorId() == userPrincipal.getUser().getUserId() || subject.getUserId() == userPrincipal.getUser().getUserId();
     }
 
     @POST
@@ -82,6 +88,27 @@ public class WallResource {
 
         SocialEvent socialEvent = new SocialEvent(userPrincipal.getUser(), message);
         wallDao.writeOnWall(subject, socialEvent);
+        return Response.seeOther(URI.create("/wall/" + subjectName)).build();
+    }
+
+    @GET
+    @Path("{subjectName}/delete/{postId}")
+    @Produces(MediaType.TEXT_HTML)
+    public Response get(
+            @Auth UserPrincipal userPrincipal,
+            @PathParam("subjectName") @NotEmpty String subjectName,
+            @PathParam("postId") @NotNull int postId)
+    {
+        User subject = userDao.getUserByUsername(subjectName);
+        SocialEvent socialEvent = wallDao.getSocialEventById(postId);
+
+System.out.println(hasPermissionToDelete(userPrincipal, subject, socialEvent));
+
+        if(hasPermissionToDelete(userPrincipal, subject, socialEvent))
+        {
+            wallDao.deletePost(socialEvent.getId());
+        }
+
         return Response.seeOther(URI.create("/wall/" + subjectName)).build();
     }
 }

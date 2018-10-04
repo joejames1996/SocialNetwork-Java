@@ -60,6 +60,9 @@ public class User {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("username", username)
+                .add("fullname", fullname)
+                .add("id", userId)
+                .add("name", name)
                 .toString();
     }
 

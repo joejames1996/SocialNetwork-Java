@@ -19,6 +19,8 @@ public class SocialEvent {
      */
     private String content;
     private boolean canBeDeleted;
+    private int id;
+    private int authorId;
 
     public SocialEvent() {}
 
@@ -78,5 +80,25 @@ public class SocialEvent {
     public void setCanBeDeleted(boolean canBeDeleted)
     {
         this.canBeDeleted = canBeDeleted;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public int getAuthorId()
+    {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId)
+    {
+        this.authorId = authorId;
     }
 }
