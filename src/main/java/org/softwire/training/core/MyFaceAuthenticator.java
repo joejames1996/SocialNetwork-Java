@@ -22,6 +22,25 @@ public class MyFaceAuthenticator implements Authenticator<BasicCredentials, User
         this.userDao = userDao;
     }
 
+//    Old HTTP authenticator
+//    @Override
+//    public Optional<UserPrincipal> authenticate(BasicCredentials credentials) {
+//        User user = userDao.getUserByUsername(credentials.getUsername());
+//        LOGGER.debug(user.getPassword());
+//        //if(user.getPassword().equals(credentials.getPassword()))
+//        if(Hash.compareHashedPassword(credentials.getPassword(), user.getPassword()))
+//        {
+//            UserPrincipal userPrincipal = new UserPrincipal(user);
+//            LOGGER.debug("Successfully authenticated user: {}", userPrincipal);
+//            return Optional.of(userPrincipal);
+//        }
+//        else
+//        {
+//            LOGGER.debug("Failed to authenticate user, incorrect password.  Username: {}", credentials.getUsername());
+//            return Optional.empty();
+//        }
+//    }
+
     @Override
     public Optional<UserPrincipal> authenticate(BasicCredentials credentials) {
         User user = userDao.getUserByUsername(credentials.getUsername());
@@ -39,4 +58,5 @@ public class MyFaceAuthenticator implements Authenticator<BasicCredentials, User
             return Optional.empty();
         }
     }
+
 }

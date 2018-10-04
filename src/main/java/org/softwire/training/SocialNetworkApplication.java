@@ -6,8 +6,11 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
+import io.dropwizard.jersey.errors.ErrorEntityWriter;
+import io.dropwizard.jersey.errors.ErrorMessage;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.views.View;
 import io.dropwizard.views.ViewBundle;
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
@@ -17,10 +20,10 @@ import org.softwire.training.core.MyFaceAuthenticator;
 import org.softwire.training.db.UserDao;
 import org.softwire.training.db.WallDao;
 import org.softwire.training.models.UserPrincipal;
-import org.softwire.training.resources.HomePageResource;
-import org.softwire.training.resources.LandingPageResource;
-import org.softwire.training.resources.NewUserResource;
-import org.softwire.training.resources.WallResource;
+import org.softwire.training.resources.*;
+import org.softwire.training.views.ErrorView;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * Main MyFace application
@@ -66,6 +69,15 @@ public class SocialNetworkApplication extends Application<SocialNetworkConfigura
         environment.jersey().register(new WallResource(wallDao, userDao));
         environment.jersey().register(new LandingPageResource());
         environment.jersey().register(new NewUserResource(userDao));
+        environment.jersey().register(new LoginResource(userDao));
+        environment.jersey().register(new ErrorEntityWriter<ErrorMessage, View>(MediaType.TEXT_HTML_TYPE, View.class)
+        {
+            @Override
+            protected View getRepresentation(ErrorMessage errorMessage)
+            {
+                return new ErrorView(errorMessage);
+            }
+        });
 
         // HTTP Basic Auth setup
         environment.jersey().register(new AuthDynamicFeature(

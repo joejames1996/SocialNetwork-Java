@@ -42,12 +42,10 @@ public class LoginResource
             @FormParam("username") @NotEmpty String username,
             @FormParam("password") @NotEmpty String password) {
 
-        //String salt = Salt.createSalt();
-        String hashedPassword = Hash.hashPassword(password);
 
         User user = userDao.getUserByUsername(username);
 
-        userDao.createNewUser(user);
+        // authenticate here
 
         return Response.seeOther(URI.create("/home")).build();
     }
