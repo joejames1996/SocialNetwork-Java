@@ -5,6 +5,9 @@
 {{> Titlebar }}
 
 <div class="ui main text container">
+    <a href="/wall/{{subject.username}}/addevent/1" class="ui orange right floated icon button"><i class="hand paper icon"></i></a>
+    <a href="/wall/{{subject.username}}/addevent/2" class="ui orange right floated icon button"><i class="frown icon"></i></a>
+    <a href="/wall/{{subject.username}}/addevent/3" class="ui orange right floated icon button"><i class="smile icon"></i></a>
     <h1 class="ui header">{{subject.fullname}}'s wall</h1>
 
     <div class="ui list divided">
@@ -13,7 +16,8 @@
                 <img class="ui avatar image" src="/assets/images/ic_note_black_24px.svg">
                 <div class="content">
                     <a class="header" href="/wall/{{author.username}}">{{author.fullname}}</a>
-                    <div class="description">{{content}}</div>
+                    {{#eventType.description}}<div class="description">{{author.fullname}} {{eventType.description}}!</div>{{/eventType.description}}
+                    {{^eventType.description}}<div class="description">{{content}}</div>{{/eventType.description}}
                 </div>
                 {{#canBeDeleted}}<a href="/wall/{{subject.username}}/delete/{{id}}" class="ui labeled red right floated icon button">Delete<i class="inverted trash icon"></i></a>{{/canBeDeleted}}
             </div>

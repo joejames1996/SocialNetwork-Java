@@ -4,6 +4,8 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.jdbi.v3.core.mapper.Nested;
 
+import java.awt.*;
+
 /**
  * A Social Event represents a single item on a wall - i.e. a post
  */
@@ -21,12 +23,19 @@ public class SocialEvent {
     private boolean canBeDeleted;
     private int id;
     private int authorId;
+    private EventType eventType;
 
     public SocialEvent() {}
 
     public SocialEvent(User author, String content) {
         this.author = author;
         this.content = content;
+    }
+
+    public SocialEvent(User author, EventType eventType)
+    {
+        this.author = author;
+        this.eventType = eventType;
     }
 
     @Nested
@@ -69,6 +78,7 @@ public class SocialEvent {
         return MoreObjects.toStringHelper(this)
                 .add("author", author)
                 .add("content", content)
+                .add("EventType", eventType)
                 .toString();
     }
 
@@ -100,5 +110,16 @@ public class SocialEvent {
     public void setAuthorId(int authorId)
     {
         this.authorId = authorId;
+    }
+
+    @Nested
+    public EventType getEventType()
+    {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType)
+    {
+        this.eventType = eventType;
     }
 }

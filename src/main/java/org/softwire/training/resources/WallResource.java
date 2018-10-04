@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.softwire.training.db.UserDao;
 import org.softwire.training.db.WallDao;
+import org.softwire.training.models.EventType;
 import org.softwire.training.models.UserPrincipal;
 import org.softwire.training.models.SocialEvent;
 import org.softwire.training.models.User;
@@ -54,15 +55,16 @@ public class WallResource {
             if(hasPermissionToDelete(userPrincipal, subject, socialEvent))
             {
                 socialEvent.setCanBeDeleted(true);
-                LOGGER.debug("true");
             }
             else
             {
                 socialEvent.setCanBeDeleted(false);
-                LOGGER.debug("false");
             }
+            LOGGER.debug(socialEvent.toString());
             socialEventsWithDelete.add(socialEvent);
         }
+
+
 
         return new WallView(socialEventsWithDelete, subject, userPrincipal.getUser());
     }
@@ -94,7 +96,7 @@ public class WallResource {
     @GET
     @Path("{subjectName}/delete/{postId}")
     @Produces(MediaType.TEXT_HTML)
-    public Response get(
+    public Response getAfterDeletedPost(
             @Auth UserPrincipal userPrincipal,
             @PathParam("subjectName") @NotEmpty String subjectName,
             @PathParam("postId") @NotNull int postId)
@@ -102,13 +104,26 @@ public class WallResource {
         User subject = userDao.getUserByUsername(subjectName);
         SocialEvent socialEvent = wallDao.getSocialEventById(postId);
 
-System.out.println(hasPermissionToDelete(userPrincipal, subject, socialEvent));
-
         if(hasPermissionToDelete(userPrincipal, subject, socialEvent))
         {
             wallDao.deletePost(socialEvent.getId());
         }
 
+        return Response.seeOther(URI.create("/wall/" + subjectName)).build();
+    }
+
+    @GET
+    @Path("{subjectName}/addevent/{eventId}")
+    @Produces(MediaType.TEXT_HTML)
+    public Response getAfterNewEventType(
+            @Auth UserPrincipal userPrincipal,
+            @PathParam("subjectName") @NotEmpty String subjectName,
+            @PathParam("eventId") @NotNull int eventId)
+    {
+        User subject = userDao.getUserByUsername(subjectName);
+
+        SocialEvent socialEvent = new SocialEvent(userPrincipal.getUser(), new EventType(eventId));
+        wallDao.addSocialEventOfType(subject, socialEvent);
         return Response.seeOther(URI.create("/wall/" + subjectName)).build();
     }
 }
