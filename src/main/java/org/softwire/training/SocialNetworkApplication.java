@@ -1,6 +1,7 @@
 package org.softwire.training;
 
 import com.github.arteam.jdbi3.JdbiFactory;
+import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -13,12 +14,17 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.View;
 import io.dropwizard.views.ViewBundle;
 import org.jdbi.v3.core.Jdbi;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.keys.HmacKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.softwire.training.core.BasicAuthenticator;
 import org.softwire.training.core.MyFaceAuthenticator;
+import org.softwire.training.core.utils.JwtSecrets;
 import org.softwire.training.db.UserDao;
 import org.softwire.training.db.WallDao;
+import org.softwire.training.models.User;
 import org.softwire.training.models.UserPrincipal;
 import org.softwire.training.resources.*;
 import org.softwire.training.views.ErrorView;
@@ -80,11 +86,29 @@ public class SocialNetworkApplication extends Application<SocialNetworkConfigura
         });
 
         // HTTP Basic Auth setup
+//        environment.jersey().register(new AuthDynamicFeature(
+//                new BasicCredentialAuthFilter.Builder<UserPrincipal>()
+//                        .setAuthenticator(new MyFaceAuthenticator(userDao))
+//                        .setRealm("Super Secret Social Network")
+//                        .buildAuthFilter()));
+
+        // JWT Auth Setup
+        final JwtConsumer consumer = new JwtConsumerBuilder()
+                .setAllowedClockSkewInSeconds(30)
+                .setRequireExpirationTime()
+                .setRequireSubject()
+                .setVerificationKey(new HmacKey(JwtSecrets.key))
+                .setRelaxVerificationKeyValidation()
+                .build();
+
         environment.jersey().register(new AuthDynamicFeature(
-                new BasicCredentialAuthFilter.Builder<UserPrincipal>()
-                        .setAuthenticator(new MyFaceAuthenticator(userDao))
-                        .setRealm("Super Secret Social Network")
-                        .buildAuthFilter()));
+                new JwtAuthFilter.Builder<UserPrincipal>()
+                .setJwtConsumer(consumer)
+                .setRealm("Super Secret Social Network")
+                .setPrefix("Bearer")
+                .setAuthenticator(new MyFaceAuthenticator(userDao))
+                .buildAuthFilter()));
+
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserPrincipal.class));
     }
 }
