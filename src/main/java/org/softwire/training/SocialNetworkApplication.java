@@ -93,6 +93,7 @@ public class SocialNetworkApplication extends Application<SocialNetworkConfigura
 //                        .buildAuthFilter()));
 
         // JWT Auth Setup
+
         final JwtConsumer consumer = new JwtConsumerBuilder()
                 .setAllowedClockSkewInSeconds(30)
                 .setRequireExpirationTime()
@@ -103,6 +104,7 @@ public class SocialNetworkApplication extends Application<SocialNetworkConfigura
 
         environment.jersey().register(new AuthDynamicFeature(
                 new JwtAuthFilter.Builder<UserPrincipal>()
+                        .setCookieName("access_token")
                 .setJwtConsumer(consumer)
                 .setRealm("Super Secret Social Network")
                 .setPrefix("Bearer")
